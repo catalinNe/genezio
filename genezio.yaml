@@ -1,0 +1,36 @@
+backend:
+    functions:
+        - entry: mysite/asgi.py
+          handler: application
+          name: django
+          path: .
+          type: httpServer
+    language:
+        name: ts
+        runtime: nodejs20.x
+    path: javascript/cron
+    scripts:
+        deploy:
+            - npm install
+        local:
+            - npm install
+frontend:
+    environment:
+        VITE_API_URL_DJANGO: ${{ backend.functions.django.url }}
+    path: dart/todo-list-react-typescript/client
+    publish: dist
+    scripts:
+        build:
+            - npm run build
+        deploy:
+            - npm install @genezio-sdk/${{projectName}}@1.0.0-${{stage}}
+            - npm install
+        start:
+            - npm install
+            - npm run dev
+    sdk:
+        language: ts
+    subdomain: trivia
+name: trivia
+region: eu-central-1
+yamlVersion: 2
